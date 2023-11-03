@@ -1,19 +1,25 @@
-import os
-import requests  # noqa We are just importing this to prove the dependency installed correctly
+from pprint import pprint
+
+import requests
+
+import config
 import utils
+import graphql
 
 
 def main():
-    my_input = os.environ["INPUT_MYINPUT"]
-
-    env_vars = {key: value for key, value in os.environ.items() if key}
-
-    for key, value in env_vars.items():
-        print(f"{key}: {value}")
-
-    my_output = f'Hello {my_input}'
-
-    utils.set_github_action_output('myOutput', my_output)
+    # project = graphql.get_project(
+    #     project_number=config.inputs['project_number'],
+    #     owner=config.repository_owner,
+    #     repository=config.repository
+    # )
+    # print(project)
+    issues = graphql.get_repo_issues(
+        owner=config.repository_owner,
+        repository=config.repository
+    )
+    pprint(issues)
+    # utils.set_github_action_output('myOutput', my_output)
 
 
 if __name__ == "__main__":

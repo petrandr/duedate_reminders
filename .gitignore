@@ -1,1 +1,4 @@
 .idea
+.env
+output
+__pycache/
