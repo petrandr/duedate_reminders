@@ -17,10 +17,10 @@ inputs:
   aws_access_key_id:
     description: "The AWS Access Key"
     required: false
-  aws_secret_access_key_id:
+  aws_secret_access_key:
     description: "The AWS Secret Access Key"
     required: false
-  aws_region:
+  aws_default_region:
     description: "The AWS Region"
     required: false
 #outputs:
