@@ -5,7 +5,6 @@ import utils
 import graphql
 
 # Set LogLevel
-logger.basicConfig(level=print)
 
 
 def prepare_comment(issue: dict, assignees: dict, duedate: datetime):
