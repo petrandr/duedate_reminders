@@ -1,7 +1,10 @@
 import os
 import boto3
+import config
 
-ses_client = boto3.client('ses')
+ses_client = None
+if config.notification_type == 'aws_email':
+    ses_client = boto3.client('ses')
 
 
 # Set the output value by writing to the outputs in the Environment File, mimicking the behavior defined here:

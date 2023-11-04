@@ -14,6 +14,9 @@ inputs:
   notification_type:
     description: "The type of notification (comment,aws_email)"
     default: 'aws_email'
+  email_from_address:
+    description: "The from email address"
+    required: false
 #outputs:
 #  myOutput:
 #    description: "Output from the action"
