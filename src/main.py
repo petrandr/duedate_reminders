@@ -101,6 +101,7 @@ def main():
             )
             # Add the comment to the issue
             graphql.add_issue_comment(issue['id'], comment)
+            logger.info(f'Comment added to issue #{issue["number"]} with due date on {tomorrow}')
         elif config.notification_type == 'aws_email':
             # Prepare the email content
             subject, message, to = prepare_email_message(
@@ -116,6 +117,7 @@ def main():
                 subject=subject,
                 message=message
             )
+            logger.info(f'Email sent to {to} for issue #{issue["number"]} with due date on {tomorrow}')
 
 
 if __name__ == "__main__":
