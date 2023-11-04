@@ -5,7 +5,7 @@ import utils
 import graphql
 
 # Set LogLevel
-logger.basicConfig(level=logger.INFO)
+logger.basicConfig(level=print)
 
 
 def prepare_comment(issue: dict, assignees: dict, duedate: datetime):
@@ -18,10 +18,10 @@ def prepare_comment(issue: dict, assignees: dict, duedate: datetime):
         for assignee in assignees:
             comment += f'@{assignee["login"]} '
     else:
-        logger.info(f'No assignees found for issue #{issue["number"]}')
+        print(f'No assignees found for issue #{issue["number"]}')
 
     comment += f'The issue is due on: {duedate.strftime("%b %d, %Y")}'
-    logger.info(f'Issue #{duedate} | {comment}')
+    print(f'Issue #{duedate} | {comment}')
 
     return comment
 
@@ -39,7 +39,7 @@ def prepare_email_message(issue, assignees, duedate):
             _assignees += f'@{assignee["name"]} '
             mail_to.append(assignee['email'])
     else:
-        logger.info(f'No assignees found for issue #{issue["number"]}')
+        print(f'No assignees found for issue #{issue["number"]}')
 
     message = f'Assignees: {_assignees}' \
               f'<br>The issue is due on: {duedate.strftime("%b %d, %Y")}' \
@@ -58,7 +58,7 @@ def main():
 
     # Check if there are issues available
     if not issues:
-        logger.info('No issues has been found')
+        print('No issues has been found')
         return
 
     # Get the date for tomorrow
