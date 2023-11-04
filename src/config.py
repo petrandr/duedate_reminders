@@ -1,5 +1,6 @@
 import os
 
+print(os.environ)
 repository_owner = os.environ['GITHUB_REPOSITORY_OWNER']
 repository = os.environ['GITHUB_REPOSITORY']
 repository_name = repository.split('/')[1]
