@@ -1,6 +1,6 @@
 name: "Python Container Action Template"
 description: "Get started with Python Container actions"
-author: "Jacob Tomlinson"
+author: "Petros Andreou"
 inputs:
   token:
     description: "The Personal Token"
@@ -14,6 +14,15 @@ inputs:
   notification_type:
     description: "The type of notification (comment,aws_email)"
     default: 'aws_email'
+  aws_access_key_id:
+    description: "The AWS Access Key"
+    required: false
+  aws_secret_access_key_id:
+    description: "The AWS Secret Access Key"
+    required: false
+  aws_region:
+    description: "The AWS Region"
+    required: false
 #outputs:
 #  myOutput:
 #    description: "Output from the action"
@@ -21,6 +30,6 @@ runs:
   using: "docker"
   image: "Dockerfile"
   env:
-    AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-    AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+    AWS_ACCESS_KEY_ID: ${{ inputs.aws_access_key_id }}
+    AWS_SECRET_ACCESS_KEY: ${{ inputs.aws_secret_access_key_id }}
+    AWS_DEFAULT_REGION: ${{ inputs.aws_region }}
