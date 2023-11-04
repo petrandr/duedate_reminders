@@ -2,12 +2,21 @@ name: "Python Container Action Template"
 description: "Get started with Python Container actions"
 author: "Jacob Tomlinson"
 inputs:
-  myInput:
-    description: "Input to use"
-    default: "world"
-outputs:
-  myOutput:
-    description: "Output from the action"
+  token:
+    description: "The Personal Token"
+    required: true
+  project_number:
+    description: "The Project Number"
+    required: true
+  duedate_field_name:
+    description: "The field name"
+    required: false
+  notification_type:
+    description: "The type of notification (comment,aws_email)"
+    default: 'aws_email'
+#outputs:
+#  myOutput:
+#    description: "Output from the action"
 runs:
   using: "docker"
   image: "Dockerfile"
