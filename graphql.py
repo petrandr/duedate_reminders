@@ -1,65 +1,21 @@
 import requests
-
 import config
 
 
-def get_project(project_number, owner, repository):
-    # GraphQL query
+def get_repo_issues(owner, repository, duedate_field_name, after=None, issues=None):
     query = """
-    query GetProject($project_number: Int!, $owner: String!, $repo: String!) {
-        repository(owner: $owner, name: $repo) {
-            projectV2(number: $project_number) {
-                id
-                fields(first: 20) {
-                    nodes {
-                      ... on ProjectV2Field {
-                        id
-                        name
-                      }
-                      ... on ProjectV2SingleSelectField {
-                        id
-                        name
-                        options {
-                          id
-                          name
-                        }
-                      }
-                    }
-                  }
-            }
-        }
-    }
-    """
-
-    variables = {
-        'project_number': int(project_number),
-        'owner': owner,
-        'repo': repository
-    }
-    response = requests.post(
-        config.inputs['api_endpoint'],
-        json={"query": query, "variables": variables},
-        headers={"Authorization": f"Bearer {config.inputs['token']}"}
-    )
-    if response.json().get('errors'):
-        print(response.json().get('errors'))
-
-    return response.json().get('data').get('repository').get('projectV2')
-
-
-def get_repo_issues(owner, repository, after=None, issues=[]):
-    # GraphQL query
-    query = """
-    query GetRepoIssues($owner: String!, $repo: String!, $after: String) {
+    query GetRepoIssues($owner: String!, $repo: String!, $duedate: String!, $after: String) {
           repository(owner: $owner, name: $repo) {
             issues(first: 100, after: $after, states: [OPEN]) {
               nodes {
+                id
                 title
                 number
                 assignees(first:100) {
                   nodes {
                     name
                     email
+                    login
                   }
                 }
                 projectItems(first: 10) {
@@ -68,7 +24,7 @@ def get_repo_issues(owner, repository, after=None, issues=[]):
                       number
                       title
                     }
-                    fieldValueByName(name: "Due Date") {
+                    fieldValueByName(name: $duedate) {
                       ... on ProjectV2ItemFieldDateValue {
                         id
                         date
@@ -91,21 +47,48 @@ def get_repo_issues(owner, repository, after=None, issues=[]):
     variables = {
         'owner': owner,
         'repo': repository,
+        'duedate': duedate_field_name,
         'after': after
     }
 
     response = requests.post(
-        config.inputs['api_endpoint'],
+        config.api_endpoint,
         json={"query": query, "variables": variables},
-        headers={"Authorization": f"Bearer {config.inputs['token']}"}
+        headers={"Authorization": f"Bearer {config.token}"}
     )
 
     if response.json().get('errors'):
         print(response.json().get('errors'))
 
     pageinfo = response.json().get('data').get('repository').get('issues').get('pageInfo')
+    if issues is None:
+        issues = []
     issues = issues + response.json().get('data').get('repository').get('issues').get('nodes')
     if pageinfo.get('hasNextPage'):
         return get_repo_issues(owner=owner, repository=repository, after=pageinfo.get('endCursor'), issues=issues)
 
     return issues
+
+
+def add_issue_comment(issueId, comment):
+    mutation = """
+    mutation AddIssueComment($issueId: ID!, $comment: String!) {
+        addComment(input: {subjectId: $issueId, body: $comment}) {
+            clientMutationId
+        }
+    }
+    """
+
+    variables = {
+        'issueId': issueId,
+        'comment': comment
+    }
+    response = requests.post(
+        config.api_endpoint,
+        json={"query": mutation, "variables": variables},
+        headers={"Authorization": f"Bearer {config.token}"}
+    )
+    if response.json().get('errors'):
+        print(response.json().get('errors'))
+
+    return response.json().get('data')

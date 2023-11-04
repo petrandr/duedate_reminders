@@ -1,4 +1,4 @@
 .idea
 .env
 output
-__pycache/
+**/__pycache__/
