@@ -5,6 +5,7 @@ import utils
 import graphql
 
 # Set LogLevel
+logger.basicConfig(level=logger.INFO)
 
 
 def prepare_comment(issue: dict, assignees: dict, duedate: datetime):
@@ -17,10 +18,10 @@ def prepare_comment(issue: dict, assignees: dict, duedate: datetime):
         for assignee in assignees:
             comment += f'@{assignee["login"]} '
     else:
-        print(f'No assignees found for issue #{issue["number"]}')
+        logger.info(f'No assignees found for issue #{issue["number"]}')
 
     comment += f'The issue is due on: {duedate.strftime("%b %d, %Y")}'
-    print(f'Issue #{duedate} | {comment}')
+    logger.info(f'Issue #{duedate} | {comment}')
 
     return comment
 
@@ -38,7 +39,7 @@ def prepare_email_message(issue, assignees, duedate):
             _assignees += f'@{assignee["name"]} '
             mail_to.append(assignee['email'])
     else:
-        print(f'No assignees found for issue #{issue["number"]}')
+        logger.info(f'No assignees found for issue #{issue["number"]}')
 
     message = f'Assignees: {_assignees}' \
               f'<br>The issue is due on: {duedate.strftime("%b %d, %Y")}' \
@@ -48,6 +49,7 @@ def prepare_email_message(issue, assignees, duedate):
 
 
 def main():
+    logger.info('Process started...')
     # Get the issues
     issues = graphql.get_repo_issues(
         owner=config.repository_owner,
@@ -57,7 +59,7 @@ def main():
 
     # Check if there are issues available
     if not issues:
-        print('No issues has been found')
+        logger.info('No issues has been found')
         return
 
     # Get the date for tomorrow
