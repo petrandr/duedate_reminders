@@ -8,11 +8,6 @@ server_url = os.environ['GITHUB_SERVER_URL']
 token = os.environ['INPUT_TOKEN']
 project_number = int(os.environ['INPUT_PROJECT_NUMBER'])
 
-if os.environ.get('INPUT_AWS_ACCESS_KEY_ID'):
-    os.environ['AWS_ACCESS_KEY_ID'] = os.environ['INPUT_AWS_ACCESS_KEY_ID']
-    os.environ['AWS_SECRET_ACCESS_KEY'] = os.environ['INPUT_AWS_SECRET_ACCESS_KEY']
-    os.environ['AWS_DEFAULT_REGION'] = os.environ['INPUT_AWS_DEFAULT_REGION']
-
 api_endpoint = os.environ.get('INPUT_API_ENDPOINT')
 if not api_endpoint:
     api_endpoint = os.environ['GITHUB_GRAPHQL_URL']
@@ -29,5 +24,3 @@ if notification_type not in ['comment', 'aws_email']:
     raise Exception(f'Unsupported notification type {notification_type}')
 
 email_from_address = os.environ.get('INPUT_EMAIL_FROM_ADDRESS')
-
-print(os.environ)
