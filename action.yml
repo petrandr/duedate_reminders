@@ -14,22 +14,9 @@ inputs:
   notification_type:
     description: "The type of notification (comment,aws_email)"
     default: 'aws_email'
-  aws_access_key_id:
-    description: "The AWS Access Key"
-    required: false
-  aws_secret_access_key:
-    description: "The AWS Secret Access Key"
-    required: false
-  aws_default_region:
-    description: "The AWS Region"
-    required: false
 #outputs:
 #  myOutput:
 #    description: "Output from the action"
 runs:
   using: "docker"
   image: "Dockerfile"
-  env:
-    AWS_ACCESS_KEY_ID: ${{ inputs.aws_access_key_id }}
-    AWS_SECRET_ACCESS_KEY: ${{ inputs.aws_secret_access_key }}
-    AWS_DEFAULT_REGION: ${{ inputs.aws_region }}
