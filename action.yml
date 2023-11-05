@@ -1,8 +1,8 @@
-name: "Python Container Action Template"
-description: "Get started with Python Container actions"
+name: "DueDate Reminder"
+description: "Setup the DueDate Reminders"
 author: "Petros Andreou"
 inputs:
-  token:
+  gh_token:
     description: "The Personal Token"
     required: true
   project_number:
@@ -10,16 +10,28 @@ inputs:
     required: true
   duedate_field_name:
     description: "The field name"
-    required: false
+    required: true
+    default: "Due Date"
   notification_type:
     description: "The type of notification (comment,aws_email)"
-    default: 'aws_email'
-  email_from_address:
-    description: "The from email address"
+    required: true
+    default: 'comment'
+  smtp_server:
+    description: "The mail server address"
     required: false
-#outputs:
-#  myOutput:
-#    description: "Output from the action"
+  smtp_port:
+    description: "The mail server port"
+    required: false
+  smtp_username:
+    description: "The mail server username"
+    required: false
+  smtp_password:
+    description: "The mail server password"
+    required: false
+  smtp_from_email:
+    description: "The mail from email address"
+    required: false
+
 runs:
   using: "docker"
   image: "Dockerfile"

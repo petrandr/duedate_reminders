@@ -54,7 +54,7 @@ def get_repo_issues(owner, repository, duedate_field_name, after=None, issues=No
     response = requests.post(
         config.api_endpoint,
         json={"query": query, "variables": variables},
-        headers={"Authorization": f"Bearer {config.token}"}
+        headers={"Authorization": f"Bearer {config.gh_token}"}
     )
 
     if response.json().get('errors'):
@@ -86,7 +86,7 @@ def add_issue_comment(issueId, comment):
     response = requests.post(
         config.api_endpoint,
         json={"query": mutation, "variables": variables},
-        headers={"Authorization": f"Bearer {config.token}"}
+        headers={"Authorization": f"Bearer {config.gh_token}"}
     )
     if response.json().get('errors'):
         print(response.json().get('errors'))

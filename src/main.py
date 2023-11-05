@@ -30,8 +30,7 @@ def prepare_email_message(issue, assignees, duedate):
     """
     Prepare the email message, subject and mail_to addresses
     """
-
-    subject = f'DUE SOON | #{issue["number"]} {issue["title"]}'
+    subject = f'Re: [{config.repository}] {issue["title"]} (#{issue["number"]})'
     _assignees = ''
     mail_to = []
     if assignees:
@@ -102,7 +101,7 @@ def main():
             # Add the comment to the issue
             graphql.add_issue_comment(issue['id'], comment)
             logger.info(f'Comment added to issue #{issue["number"]} with due date on {tomorrow}')
-        elif config.notification_type == 'aws_email':
+        elif config.notification_type == 'email':
             # Prepare the email content
             subject, message, to = prepare_email_message(
                 issue=issue,
@@ -111,12 +110,13 @@ def main():
             )
 
             # Send the email
-            utils.send_aws_email(
-                from_email=config.email_from_address,
+            utils.send_email(
+                from_email=config.smtp_from_email,
                 to_email=to,
                 subject=subject,
-                message=message
+                html_body=message
             )
+
             logger.info(f'Email sent to {to} for issue #{issue["number"]} with due date on {tomorrow}')
 
 

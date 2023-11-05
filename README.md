@@ -1,85 +1,110 @@
-# Python Container Action Template
+# Issue Due Date Notifications
 
-[![Action Template](https://img.shields.io/badge/Action%20Template-Python%20Container%20Action-blue.svg?colorA=24292e&colorB=0366d6&style=flat&longCache=true&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAM6wAADOsB5dZE0gAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAERSURBVCiRhZG/SsMxFEZPfsVJ61jbxaF0cRQRcRJ9hlYn30IHN/+9iquDCOIsblIrOjqKgy5aKoJQj4O3EEtbPwhJbr6Te28CmdSKeqzeqr0YbfVIrTBKakvtOl5dtTkK+v4HfA9PEyBFCY9AGVgCBLaBp1jPAyfAJ/AAdIEG0dNAiyP7+K1qIfMdonZic6+WJoBJvQlvuwDqcXadUuqPA1NKAlexbRTAIMvMOCjTbMwl1LtI/6KWJ5Q6rT6Ht1MA58AX8Apcqqt5r2qhrgAXQC3CZ6i1+KMd9TRu3MvA3aH/fFPnBodb6oe6HM8+lYHrGdRXW8M9bMZtPXUji69lmf5Cmamq7quNLFZXD9Rq7v0Bpc1o/tp0fisAAAAASUVORK5CYII=)](https://github.com/jacobtomlinson/python-container-action)
-[![Actions Status](https://github.com/jacobtomlinson/python-container-action/workflows/Lint/badge.svg)](https://github.com/jacobtomlinson/python-container-action/actions)
-[![Actions Status](https://github.com/jacobtomlinson/python-container-action/workflows/Integration%20Test/badge.svg)](https://github.com/jacobtomlinson/python-container-action/actions)
+GitHub doesn't provide a built-in way to set due dates for issues and receive notifications before they are due. This
+GitHub Action aims to address that by allowing you to manage due dates for issues within a central GitHub project.
 
-This is a template for creating GitHub actions and contains a small Python application which will be built into a minimal [Container Action](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-a-docker-container-action). Our final container from this template is ~50MB, yours may be a little bigger once you add some code. If you want something smaller check out my [go-container-action template](https://github.com/jacobtomlinson/go-container-action/actions).
+## Table of Contents
 
-In `main.py` you will find a small example of accessing Action inputs and returning Action outputs. For more information on communicating with the workflow see the [development tools for GitHub Actions](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/development-tools-for-github-actions).
+- [Introduction](#introduction)
+- [Custom Field Setup](#custom-field-setup)
+- [Usage](#usage)
+    - [Prerequisites](#prerequisites)
+    - [Inputs](#inputs)
+    - [Examples](#examples)
+      - [With Comment](#with-comment)
+      - [With Email](#with-email)
 
-> 🏁 To get started, click the `Use this template` button on this repository [which will create a new repository based on this template](https://github.blog/2019-06-06-generate-new-repositories-with-repository-templates/).
+## Introduction
+
+This GitHub Action allows you to manage due dates for issues in a central GitHub project. It integrates with a custom
+date field (due date) that you can add to your GitHub project board. By using this action to your project's issues,
+you can start receiving notifications just before the due date. There is two ways to receive notifications.
+1. With comments: Everyone which is subscribed to the issue will receive email notification when comment is placed.
+2. With emails: Assignees will receive email directly from the action. 
+
+## Custom Field Setup
+
+To set up the custom date field (due date) in your GitHub project board:
+
+1. Go to your GitHub projects tab.
+2. Click on "New project" and then click "Create".
+3. Click on `+` icon to add new field, then click on `+ New field`
+4. Add a custom field with the name "Due Date" and the field type as "Date.", then click `Save`.
 
 ## Usage
 
-Describe how to use your action here.
+### Prerequisites
 
-### Example workflow
+Before you can start using this GitHub Action, you'll need to ensure you have the following:
 
-```yaml
-name: My Workflow
-on: [push, pull_request]
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@master
-    - name: Run action
-
-      # Put your action repo here
-      uses: me/myaction@master
-
-      # Put an example of your mandatory inputs here
-      with:
-        myInput: world
-```
+1. A GitHub repository where you want to enable this action.
+2. A GitHub project board with a custom date field (due date) added.
 
 ### Inputs
 
-| Input                                             | Description                                        |
-|------------------------------------------------------|-----------------------------------------------|
-| `myInput`  | An example mandatory input    |
-| `anotherInput` _(optional)_  | An example optional input    |
+| Input                             | Description                                                                             |
+|-----------------------------------|-----------------------------------------------------------------------------------------|
+| `gh_token`                        | The GitHub Token                                                                        |
+| `project_number`                  | THe project number                                                                      |
+| `duedate_field_name` _(optional)_ | THe duedate field name. The default is `Due Date`                                       |
+| `notification_type` _(optional)_  | The notification type. Available values are `comment` and `email`. Default is `comment` |
+| `smtp_server` _(optional)_        | The mail server address. `Required` only when `notification_type` is set to `email`     |
+| `smtp_port` _(optional)_          | The mail server port. `Required` only when `notification_type` is set to `email`        |
+| `smtp_username` _(optional)_      | The mail server username. `Required` only when `notification_type` is set to `email`    |
+| `smtp_password` _(optional)_      | The mail server password. `Required` only when `notification_type` is set to `email`    |
+| `smtp_from_email` _(optional)_    | The mail from email address. `Required` only when `notification_type` is set to `email` |
 
-### Outputs
+### Examples
 
-| Output                                             | Description                                        |
-|------------------------------------------------------|-----------------------------------------------|
-| `myOutput`  | An example output (returns 'Hello world')    |
-
-## Examples
-
-> NOTE: People ❤️ cut and paste examples. Be generous with them!
-
-### Using the optional input
-
-This is how to use the optional input.
+#### With Comment
+To set up due date notifications, you'll need to create or update a GitHub Actions workflow in your repository. Below is
+an example of a workflow YAML file:
 
 ```yaml
-with:
-  myInput: world
-  anotherInput: optional
+name: 'Check Issues Due Date'
+
+on:
+  schedule:
+    - cron: '0 1 * * *'
+
+jobs:
+  reminder:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check duedate and write a comment
+        uses: petrandr/duedate_reminders@latest
+        with:
+          gh_token: ${{ secrets.GITHUB_TOKEN }}
+          project_number: 2
+          duedate_field_name: "Due Date"
+          notification_type: "comment"
 ```
 
-### Using outputs
-
-Show people how to use your outputs in another action.
+#### With Email
+To set up due date notifications, you'll need to create or update a GitHub Actions workflow in your repository. Below is
+an example of a workflow YAML file:
 
 ```yaml
-steps:
-- uses: actions/checkout@master
-- name: Run action
-  id: myaction
+name: 'Check Issues Due Date'
 
-  # Put your action name here
-  uses: me/myaction@master
+on:
+  schedule:
+    - cron: '0 1 * * *'
 
-  # Put an example of your mandatory arguments here
-  with:
-    myInput: world
-
-# Put an example of using your outputs here
-- name: Check outputs
-    run: |
-    echo "Outputs - ${{ steps.myaction.outputs.myOutput }}"
+jobs:
+  reminder:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check duedate and send email to assignees
+        uses: petrandr/duedate_reminders@latest
+        with:
+          gh_token: ${{ secrets.GITHUB_TOKEN }}
+          project_number: 2
+          duedate_field_name: "Due Date"
+          notification_type: "email"
+          smtp_server: smtp.example.com
+          smtp_port: 587
+          smtp_username: ${{secrets.SMTP_USERNAME}}
+          smtp_password: ${{secrets.SMTP_PASSWORD}}
+          smtp_from_email: github@example.com
 ```
