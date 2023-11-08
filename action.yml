@@ -1,8 +1,12 @@
 name: "Issue DueDate Reminder"
 description: "Setup Issue DueDate Reminders to not miss anything."
-icon: clock
-color: green
 author: "Petros Andreou"
+branding:
+  icon: 'clock'
+  color: 'green'
+runs:
+  using: "docker"
+  image: "Dockerfile"
 inputs:
   gh_token:
     description: "The Personal Token"
@@ -45,7 +49,3 @@ inputs:
   smtp_from_email:
     description: "The mail from email address"
     required: false
-
-runs:
-  using: "docker"
-  image: "Dockerfile"
