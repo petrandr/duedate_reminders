@@ -3,6 +3,47 @@ import html2text
 import config
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from datetime import datetime
+from logger import logger
+
+
+def prepare_comment(issue: dict, assignees: dict, duedate):
+    """
+    Prepare the comment from the given arguments and return it
+    """
+
+    comment = ''
+    if assignees:
+        for assignee in assignees:
+            comment += f'@{assignee["login"]} '
+    else:
+        logger.info(f'No assignees found for issue #{issue["number"]}')
+
+    comment += f'The issue is due on: {duedate.strftime("%b %d, %Y")}'
+    logger.info(f'Issue #{duedate} | {comment}')
+
+    return comment
+
+
+def prepare_email_message(issue, assignees, duedate):
+    """
+    Prepare the email message, subject and mail_to addresses
+    """
+    subject = f'Re: [{config.repository}] {issue["title"]} (#{issue["number"]})'
+    _assignees = ''
+    mail_to = []
+    if assignees:
+        for assignee in assignees:
+            _assignees += f'@{assignee["name"]} '
+            mail_to.append(assignee['email'])
+    else:
+        logger.info(f'No assignees found for issue #{issue["number"]}')
+
+    message = f'Assignees: {_assignees}' \
+              f'<br>The issue is due on: {duedate.strftime("%b %d, %Y")}' \
+              f'<br><br>{issue["url"]}'
+
+    return [subject, message, mail_to]
 
 
 def send_email(from_email: str, to_email: list, subject: str, html_body: str):
