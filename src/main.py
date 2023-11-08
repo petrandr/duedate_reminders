@@ -78,7 +78,7 @@ def main():
                 # Add the comment to the issue
                 graphql.add_issue_comment(issue['id'], comment)
 
-            logger.info(f'Comment added to issue #{issue["number"]} with due date on {tomorrow}')
+            logger.info(f'Comment added to issue #{issue["number"]} ({issue["id"]}) with due date on {tomorrow}')
         elif config.notification_type == 'email':
             # Prepare the email content
             subject, message, to = utils.prepare_email_message(

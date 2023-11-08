@@ -20,7 +20,7 @@ def prepare_comment(issue: dict, assignees: dict, duedate):
         logger.info(f'No assignees found for issue #{issue["number"]}')
 
     comment += f'The issue is due on: {duedate.strftime("%b %d, %Y")}'
-    logger.info(f'Issue #{duedate} | {comment}')
+    logger.info(f'Issue {issue["title"]} | {comment}')
 
     return comment
 

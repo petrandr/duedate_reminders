@@ -147,7 +147,7 @@ def get_project_issues(owner, owner_type, project_number, duedate_field_name, af
 
     open_issues = []
     nodes = response.json().get('data').get(owner_type).get('projectV2').get('items').get('nodes')
-    print(nodes)
+
     for node in nodes:
         if node['content']['state'] == 'OPEN':
             open_issues.append(node)

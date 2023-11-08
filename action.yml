@@ -16,6 +16,10 @@ inputs:
     description: "The type of notification (comment,aws_email)"
     required: true
     default: 'comment'
+  repository_owner_type:
+    description: "The type of the repository owner (organization,user)"
+    required: true
+    default: 'user'
   enterprise_github:
     description: "Determines if the GitHub is the enterprise ot not (True,False)"
     required: false

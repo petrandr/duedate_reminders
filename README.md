@@ -49,6 +49,7 @@ Before you can start using this GitHub Action, you'll need to ensure you have th
 | `duedate_field_name` _(optional)_ | THe duedate field name. The default is `Due Date`                                       |
 | `notification_type` _(optional)_  | The notification type. Available values are `comment` and `email`. Default is `comment` |
 | `enterprise_github` _(optional)_  | `True` if you are using enterprise github and false if not. Default is `False`          |
+| `repository_owner_type` _(optional)_  | The type of the repository owner (oragnization or user). Default is `user`              |
 | `smtp_server` _(optional)_        | The mail server address. `Required` only when `notification_type` is set to `email`     |
 | `smtp_port` _(optional)_          | The mail server port. `Required` only when `notification_type` is set to `email`        |
 | `smtp_username` _(optional)_      | The mail server username. `Required` only when `notification_type` is set to `email`    |
