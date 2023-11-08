@@ -1,5 +1,7 @@
-name: "DueDate Reminder"
-description: "Setup the DueDate Reminders"
+name: "Issue DueDate Reminder"
+description: "Setup Issue DueDate Reminders to not miss anything."
+icon: clock
+color: green
 author: "Petros Andreou"
 inputs:
   gh_token:
