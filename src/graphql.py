@@ -1,5 +1,3 @@
-from pprint import pprint
-
 import requests
 import config
 
@@ -79,7 +77,7 @@ def get_repo_issues(owner, repository, duedate_field_name, after=None, issues=No
     return issues
 
 
-def get_project_issues(owner, owner_type, project_number, duedate_field_name, after=None, issues=None):
+def get_project_issues(owner, owner_type, project_number, duedate_field_name, filters=None, after=None, issues=None):
     query = f"""
     query GetProjectIssues($owner: String!, $projectNumber: Int!, $duedate: String!, $after: String)  {{
           {owner_type}(login: $owner) {{
@@ -145,20 +143,28 @@ def get_project_issues(owner, owner_type, project_number, duedate_field_name, af
     if issues is None:
         issues = []
 
-    open_issues = []
     nodes = response.json().get('data').get(owner_type).get('projectV2').get('items').get('nodes')
 
-    for node in nodes:
-        if node['content']['state'] == 'OPEN':
-            open_issues.append(node)
+    if filters:
+        filtered_issues = []
+        for node in nodes:
+            if filters.get('open_only') and node['content']['state'] != 'OPEN':
+                continue
+            if filters.get('empty_duedate') and node['fieldValueByName']:
+                continue
+            filtered_issues.append(node)
 
-    issues = issues + open_issues
+        nodes = filtered_issues
+
+    issues = issues + nodes
+
     if pageinfo.get('hasNextPage'):
         return get_project_issues(
             owner=owner,
             owner_type=owner_type,
             project_number=project_number,
             after=pageinfo.get('endCursor'),
+            filters=filters,
             issues=issues,
             duedate_field_name=duedate_field_name
         )

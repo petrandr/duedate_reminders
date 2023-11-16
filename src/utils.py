@@ -3,11 +3,28 @@ import html2text
 import config
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from datetime import datetime
 from logger import logger
 
 
-def prepare_comment(issue: dict, assignees: dict, duedate):
+def prepare_missing_duedate_comment(issue: dict, assignees: dict):
+    """
+    Prepare the comment from the given arguments and return it
+    """
+
+    comment = ''
+    if assignees:
+        for assignee in assignees:
+            comment += f'@{assignee["login"]} '
+    else:
+        logger.info(f'No assignees found for issue #{issue["number"]}')
+
+    comment += f'Kindly set the `Due Date` for this issue.'
+    logger.info(f'Issue {issue["title"]} | {comment}')
+
+    return comment
+
+
+def prepare_expiring_issue_comment(issue: dict, assignees: dict, duedate):
     """
     Prepare the comment from the given arguments and return it
     """
@@ -25,7 +42,28 @@ def prepare_comment(issue: dict, assignees: dict, duedate):
     return comment
 
 
-def prepare_email_message(issue, assignees, duedate):
+def prepare_missing_duedate_email_message(issue, assignees):
+    """
+    Prepare the email message, subject and mail_to addresses
+    """
+    subject = f'Re: [{config.repository}] {issue["title"]} (#{issue["number"]})'
+    _assignees = ''
+    mail_to = []
+    if assignees:
+        for assignee in assignees:
+            _assignees += f'@{assignee["name"]} '
+            mail_to.append(assignee['email'])
+    else:
+        logger.info(f'No assignees found for issue #{issue["number"]}')
+
+    message = f'Assignees: {_assignees}' \
+              f'<br>Kindly set the due date for this issue.' \
+              f'<br><br>{issue["url"]}'
+
+    return [subject, message, mail_to]
+
+
+def prepare_expiring_issue_email_message(issue, assignees, duedate):
     """
     Prepare the email message, subject and mail_to addresses
     """

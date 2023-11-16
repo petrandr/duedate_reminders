@@ -14,6 +14,10 @@ inputs:
   project_number:
     description: "The Project Number"
     required: true
+  notify_for:
+    description: "The type of the notification are about to sent (expiring_issues,missing_duedate) "
+    required: true
+    default: "expiring_issues"
   duedate_field_name:
     description: "The field name"
     required: true
