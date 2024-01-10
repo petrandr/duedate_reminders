@@ -1,3 +1,5 @@
+from pprint import pprint
+
 import requests
 import config
 
@@ -148,7 +150,7 @@ def get_project_issues(owner, owner_type, project_number, duedate_field_name, fi
     if filters:
         filtered_issues = []
         for node in nodes:
-            if filters.get('open_only') and node['content']['state'] != 'OPEN':
+            if filters.get('open_only') and node['content'].get('state') != 'OPEN':
                 continue
             if filters.get('empty_duedate') and node['fieldValueByName']:
                 continue
